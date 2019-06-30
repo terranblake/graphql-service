@@ -1,0 +1,11 @@
+{
+	"db": {
+		"user": "admin",
+		"password": "testing123",
+		"host": "ds135305.mlab.com:35305",
+		"name": "modern-db"
+	},
+	"api": {
+		"port": 4000
+	}
+}
