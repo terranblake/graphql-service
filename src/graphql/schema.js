@@ -4,21 +4,23 @@ const {
 	GraphQLSchema
 } = require('graphql');
 
-const CompanyType = require('./CompanyType');
+const CompanyType = require('./types/Company');
+const Company = require('../models/companies');
 
 const RootQuery = new GraphQLObjectType({
 	name: 'RootQueryType',
 	fields: {
-		companies: {
+		company: {
 			type: CompanyType,
 			args: { id: { type: GraphQLString } },
 			resolve(parent, args) {
-				// logic for serving data
+				return Company.findById(args.id);
 			}
 		}
 	}
 });
 
 module.exports = new GraphQLSchema({
-	query: RootQuery
+	query: RootQuery,
+	mutation: require('./mutations'),
 });

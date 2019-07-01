@@ -1,38 +1,29 @@
 const config = require('config');
-const hapi = require('hapi');
-const mongoose = require('mongoose');
+const Koa = require('koa');
+const app = new Koa();
+const mount = require('koa-mount');
+const graphqlHTTP = require('koa-graphql');
 
-const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi');
-const schema = require('./src/graphql/schema');
+require('./src/utils/mongo');
 
-const { getConnectionParams } = require('./src/utils/mongo-helper');
-const { user, password, host, name } = getConnectionParams();
-
-const server = hapi.server({
-	port: config.get('api.port'),
-	host: 'localhost'
+app.use(async (ctx, next) => {
+	await next();
+	const rt = ctx.response.get('X-Response-Time');
+	console.log(`${ctx.method} ${ctx.url} - ${rt}`);
 });
 
-const creds = `${user}:${password}@`;
-const connection = `mongodb://${password ? creds : ''}${host}/${name}`;
-
-mongoose.connect(connection);
-mongoose.connection.once('open', () => {
-	const { host, port, name } = mongoose.connection;
-	console.log(`mongodb running at\t${host}:${port}/${name}`);
+app.use(async (ctx, next) => {
+	const start = Date.now();
+	await next();
+	const ms = Date.now() - start;
+	ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-const init = async () => {
-	console.log({ env: process.env });
+app.use(mount('/graphql', graphqlHTTP({
+	schema: require('./src/graphql/schema'),
+	graphiql: true
+})));
 
-	// register hapi graphql plugins
-	await server.register(require('./src/hapi-plugins/graphql'));
+app.listen(config.get('server.port'));
 
-	server.route(require('./src/routes/process'));
-	server.route(require('./src/routes/companies'));
-
-	await server.start();
-	console.log(`server running at\t${server.info.uri}`);
-}
-
-init();
+app.on('error', console.error);

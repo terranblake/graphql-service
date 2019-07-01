@@ -1,11 +1,12 @@
 {
-	"db": {
-		// "user": "admin",
-		// "password": "testing123",
-		"host": "localhost",
-		"name": "fundamentals"
-	},
-	"api": {
+	"server": {
 		"port": 4000
+	},
+	"mongodb": {
+		"connection": {
+			"address": "127.0.0.1",
+			"port": "27017",
+			"database": "fundamentals"
+		}
 	}
 }

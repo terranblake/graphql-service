@@ -1,0 +1,12 @@
+{
+	"server": {
+		"port": 4000
+	},
+	"mongodb": {
+		"connection": {
+			"address": "heroku_j0kh12m5:crnsigb3caj5s3aoe9uck1rprk@ds345597.mlab.com:45597",
+			"port": "45597",
+			"database": "heroku_j0kh12m5"
+		}
+	}
+}

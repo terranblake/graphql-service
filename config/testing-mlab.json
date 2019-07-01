@@ -1,11 +1,12 @@
 {
-	"db": {
-		"user": "admin",
-		"password": "testing123",
-		"host": "ds135305.mlab.com:35305",
-		"name": "modern-db"
-	},
-	"api": {
+	"server": {
 		"port": 4000
+	},
+	"mongodb": {
+		"connection": {
+			"address": "admin:testing123@ds135305.mlab.com",
+			"port": "35305",
+			"database": "modern-db"
+		}
 	}
 }
